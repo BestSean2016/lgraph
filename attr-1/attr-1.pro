@@ -5,7 +5,8 @@ CONFIG -= qt
 
 
 INCLUDEPATH += /usr/local/include/igraph
-SOURCES += main.c
+SOURCES += main.c \
+    chinese.c
 
 LIBS += -ligraph
 
@@ -13,3 +14,6 @@ DISTFILES += \
     unnamed0.gml \
     celegansneural.gml \
     karate.gml
+
+HEADERS += \
+    chinese.h

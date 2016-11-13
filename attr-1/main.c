@@ -1,6 +1,7 @@
 #include <igraph.h>
 #include <stdio.h>
-
+#include <stdlib.h>
+#include <string.h>
 
 
 int print_attributes(const igraph_t *g) {
