@@ -163,6 +163,9 @@ int get_attr(const char* filepath) {
     igraph_strvector_t gnames, vnames, enames;
     int i;
 
+    /* turn on attribute handling */
+    igraph_i_set_attribute_table(&igraph_cattribute_table);
+
     ifile = fopen(filepath, "r");
     if (ifile == 0) {
       printf("Can not open file %s\n", filepath);
@@ -171,9 +174,6 @@ int get_attr(const char* filepath) {
 
     igraph_read_graph_gml(&g, ifile);
     fclose(ifile);
-
-    /* turn on attribute handling */
-    igraph_i_set_attribute_table(&igraph_cattribute_table);
 
     igraph_vector_init(&gtypes, 0);
     igraph_vector_init(&vtypes, 0);

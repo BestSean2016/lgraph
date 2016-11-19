@@ -165,85 +165,64 @@ int gbk_2_webucs2(char *src, char *des, size_t srclen, size_t deslen,
 }
 
 
-int webucs_2_gbk(char *src, char *des, size_t srclen, size_t deslen,
-                 const char *prefix, const char *postfix) {
-  unsigned short int *tmp = 0, *buf = 0;
-  int ret = 0;
-  char* srcptr = src;
-  size_t dlen = 0;
 
-  // 2 bytes for base16
-  tmp = (unsigned short int *)calloc(sizeof(char), srclen + 2);
-  buf = tmp;
-  while (*srcptr) {
-    if (!strncmp(srcptr, prefix, strlen(prefix))) {
-      char* postptr = strstr(srcptr, postfix);
-      int k = 0;
-      if (!postptr) return (-2);
+static int ucs2_2_str(char *src, char *des, size_t srclen, size_t deslen,
+                      const char *prefix, const char *postfix, const char* to, const int base) {
+    unsigned short int *tmp = 0, *buf = 0;
+    int ret = 0;
+    char* srcptr = src;
+    size_t dlen = 0, ulen = 0;
 
-      srcptr += strlen(prefix);
-      if (1 != sscanf(srcptr, "%d", &k)) {
-        free(tmp);
-        return (-1);
+    // 2 bytes for base16
+    tmp = (unsigned short int *)calloc(sizeof(char), srclen + 2);
+    buf = tmp;
+    while (*srcptr) {
+      if (!strncmp(srcptr, prefix, strlen(prefix))) {
+        char* postptr = strstr(srcptr, postfix);
+        if (!postptr) return (-2);
+
+        srcptr += strlen(prefix);
+        *buf = (unsigned short int)strtol(srcptr, NULL, base);
+        srcptr = postptr + strlen(postfix);
+        ++ulen;
+      } else {
+        *buf = (unsigned short int)(*srcptr);
+        srcptr++;
+        ++dlen;
       }
-      *buf = (unsigned short int)k;
-      srcptr = postptr + strlen(postfix);
-    } else {
-      *buf = (unsigned short int)(*srcptr);
-      srcptr++;
+
+      ++buf;
     }
 
-    ++dlen;
-    ++buf;
-  }
+
+    if (deslen < (dlen * 2 + ulen * 3)) return -1000;
+    memset(des, 0, deslen);
+    ret = convert((char*)tmp, des, (dlen + ulen)* 2, deslen, "UCS-2", to);
+    free(tmp);
+    return ret;
+
+}
 
 
-  if (deslen < dlen * 2) return -1000;
-  memset(des, 0, deslen);
-  ret = convert((char*)tmp, des, dlen * 2, deslen, "UCS-2", "GBK");
-  free(tmp);
-  return ret;
+int webucs16_2_gbk(char *src, char *des, size_t srclen, size_t deslen,
+                        const char *prefix, const char *postfix) {
+  return ucs2_2_str(src, des, srclen, deslen, prefix, postfix, "GBK", 16);
+}
+
+int webucs16_2_utf8(char *src, char *des, size_t srclen, size_t deslen,
+                         const char *prefix, const char *postfix) {
+  return ucs2_2_str(src, des, srclen, deslen, prefix, postfix, "UTF8", 16);
+}
+
+
+int webucs_2_gbk(char *src, char *des, size_t srclen, size_t deslen,
+                 const char *prefix, const char *postfix) {
+  return ucs2_2_str(src, des, srclen, deslen, prefix, postfix, "GBK", 10);
 }
 
 
 
 int webucs_2_utf8(char *src, char *des, size_t srclen, size_t deslen,
                  const char *prefix, const char *postfix) {
-  unsigned short int *tmp = 0, *buf = 0;
-  int ret = 0;
-  char* srcptr = src;
-  size_t dlen = 0, ulen = 0;
-
-  // 2 bytes for base16
-  tmp = (unsigned short int *)calloc(sizeof(char), srclen + 2);
-  buf = tmp;
-  while (*srcptr) {
-    if (!strncmp(srcptr, prefix, strlen(prefix))) {
-      char* postptr = strstr(srcptr, postfix);
-      int k = 0;
-      if (!postptr) return (-2);
-
-      srcptr += strlen(prefix);
-      if (1 != sscanf(srcptr, "%d", &k)) {
-        free(tmp);
-        return (-1);
-      }
-      *buf = (unsigned short int)k;
-      srcptr = postptr + strlen(postfix);
-      ++ulen;
-    } else {
-      *buf = (unsigned short int)(*srcptr);
-      srcptr++;
-      ++dlen;
-    }
-
-    ++buf;
-  }
-
-
-  if (deslen < (dlen * 2 + ulen * 3)) return -1000;
-  memset(des, 0, deslen);
-  ret = convert((char*)tmp, des, (dlen + ulen)* 2, deslen, "UCS-2", "UTF8");
-  free(tmp);
-  return ret;
+  return ucs2_2_str(src, des, srclen, deslen, prefix, postfix, "UTF8", 10);
 }

@@ -41,6 +41,14 @@ extern int webucs_2_gbk(char *src, char *des, size_t srclen, size_t deslen,
 
 extern int webucs_2_utf8(char *src, char *des, size_t srclen, size_t deslen,
                          const char *prefix, const char *postfix);
+
+
+extern int webucs16_2_gbk(char *src, char *des, size_t srclen, size_t deslen,
+                        const char *prefix, const char *postfix);
+
+extern int webucs16_2_utf8(char *src, char *des, size_t srclen, size_t deslen,
+                         const char *prefix, const char *postfix);
+
 #ifdef __cplusplus
 }
 #endif //__cplusplus
