@@ -16,4 +16,5 @@ DISTFILES += \
     karate.gml
 
 HEADERS += \
-    chinese.h
+    chinese.h \
+    mario.h
