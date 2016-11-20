@@ -7,7 +7,7 @@ INCLUDEPATH += ../include
 
 
 SOURCES += test-1.cpp \
-    ../attr-1/chinese.c
+    ../src/chinese.c
 
 ###################### unix ############################
 unix {

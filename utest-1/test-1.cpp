@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
+
 using namespace std;
 
 int main(int argc, char **argv) {
@@ -23,7 +24,7 @@ int main(int argc, char **argv) {
   return RUN_ALL_TESTS();
 }
 
-#include "../attr-1/chinese.h"
+#include "chinese.h"
 
 TEST(convert, utf8_to_ucs2) {
   char hello[100] = "abc 123 大家好！";
@@ -114,26 +115,32 @@ TEST(convert, webucs_2_utf8) {
 
 
 
+
+
+TEST(convert, webucs16_2_utf8) {
+  char hello[100] = "abc 123 大家好！";
+  char utf8[200];
+  char webucs_2[] = "abc 123 &#x5927;&#x5bb6;&#x597d;&#xff01;";
+
+  memset(utf8, 0, 200);
+  EXPECT_EQ(0, webucs16_2_utf8(webucs_2, utf8, strlen(webucs_2) + 1, 200, "&#x", ";"));
+  EXPECT_EQ(strcmp(utf8, hello), 0);
+}
+
 TEST(convert, webucs16_2_gbk) {
   char hello[100] = "abc 123 大家好！";
   char gbk[200];
-  char webucs_2[] = "abc 123 &#22823;&#23478;&#22909;&#65281;";
+  char webucs_2[] = "abc 123 &#x5927;&#x5bb6;&#x597d;&#xff01;";
 
   char tmp[100];
   memset(tmp, 0, 100);
   EXPECT_EQ(0, convert(hello, tmp, strlen(hello), 100, "UTF-8", "GBK"));
 
   memset(gbk, 0, 200);
-  EXPECT_EQ(0, webucs_2_gbk(webucs_2, gbk, strlen(webucs_2) + 1, 200, "&#", ";"));
-  EXPECT_EQ(strcmp(gbk, tmp), 0);
+  EXPECT_EQ(0, webucs16_2_utf8(webucs_2, gbk, strlen(webucs_2) + 1, 200, "&#x", ";"));
+  EXPECT_EQ(strcmp(gbk, hello), 0);
 }
 
-TEST(convert, webucs16_2_utf8) {
-  char hello[100] = "abc 123 大家好！";
-  char utf8[200];
-  char webucs_2[] = "abc 123 &#22823;&#23478;&#22909;&#65281;";
 
-  memset(utf8, 0, 200);
-  EXPECT_EQ(0, webucs_2_utf8(webucs_2, utf8, strlen(webucs_2) + 1, 200, "&#", ";"));
-  EXPECT_EQ(strcmp(utf8, hello), 0);
-}
+
+#include "mario_types.h"

@@ -5,16 +5,19 @@ CONFIG -= qt
 
 
 INCLUDEPATH += /usr/local/include/igraph
+INCLUDEPATH += ../include
+
 SOURCES += main.c \
-    chinese.c
+    ../src/chinese.c
 
 LIBS += -ligraph
 
 DISTFILES += \
     unnamed0.gml \
     celegansneural.gml \
-    karate.gml
+    karate.gml \
+    mario.sql
 
 HEADERS += \
-    chinese.h \
-    mario.h
+    ../include/chinese.h \
+    ../include/mario_types.h
