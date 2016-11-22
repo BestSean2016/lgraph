@@ -6,8 +6,11 @@ CONFIG -= qt
 INCLUDEPATH += ../include
 
 
+DEFINES += __USING_MYSQL__
+
 SOURCES += test-1.cpp \
-    ../src/chinese.c
+    ../src/chinese.c \
+    ../src/mario_mysql.c
 
 ###################### unix ############################
 unix {

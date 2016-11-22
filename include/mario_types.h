@@ -32,18 +32,18 @@ typedef struct mr_scpt_host {
 } MR_SCPT_HOST;
 
 typedef struct mr_pipeline {
-  int64_t pl_id;       ///流程ID
-  char pl_oldid;       ///原系统ID
-  char pl_name;        ///名称
-  char pl_desc;        ///说明
-  time_t pl_create_tm; ///创建时间
-  time_t pl_modify_tm; ///更新时间
+  int64_t pl_id;        ///流程ID
+  char pl_oldid[64];    ///原系统ID
+  char pl_name[50];     ///名称
+  char pl_desc[255];    ///说明
+  time_t pl_create_tm;  ///创建时间
+  time_t pl_modify_tm;  ///更新时间
 } MR_PIPELINE;
 
-enum NODE_TYPE {
+typedef enum NODE_TYPE {
   NODE_TYPE_SCRIPT,
   NODE_TYPE_PIPELINE,
-};
+} NODE_TYPE;
 
 typedef struct mr_pl_node {
   int64_t node_id;         /// ID
@@ -63,10 +63,10 @@ typedef struct mr_pl_node {
   time_t modify_tm;        ///修改时间
 } MR_PIPELINE_NODE;
 
-enum EXEC_TYPE {
+typedef enum EXEC_TYPE {
   EXEC_TYPE_AUTO,
   EXEC_TYPE_MANUAL,
-};
+} EXEC_TYPE;
 
 typedef struct mr_pl_exec {
   int64_t pe_id;          ///流程执行结果ID
