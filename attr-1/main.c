@@ -232,22 +232,24 @@ int attr2() {
       SETVANV(&g, "id", &y);
       igraph_vector_destroy(&y);
 
-      SETVAS(&g, "name", 0, "foo");
-      SETVAS(&g, "name", 1, "foobar");
-      SETVAS(&g, "text", 0, "foo");
-      SETVAS(&g, "text", 1, "foobar");
+      // SETVAS(&g, "name", 0, "foo");
+      // SETVAS(&g, "name", 1, "foobar");
+      SETVAS(&g, "lable", 0, "foo");
+      SETVAS(&g, "lable", 1, "foobar");
 
       igraph_vector_init_seq(&y, 1, igraph_ecount(&g));
       SETEANV(&g, "id", &y);
       igraph_vector_destroy(&y);
 
-      SETEAS(&g, "name", 0, "FOO");
-      SETEAS(&g, "name", 1, "FOOBAR");
-      SETEAS(&g, "text", 0, "FOO");
-      SETEAS(&g, "text", 1, "FOOBAR");
+      // SETEAS(&g, "name", 0, "FOO");
+      // SETEAS(&g, "name", 1, "FOOBAR");
+      SETEAS(&g, "lable", 0, "FOO");
+      SETEAS(&g, "lable", 1, "FOOBAR");
 
       igraph_write_graph_gml(&g, stdout, 0, "");
       //igraph_write_graph_graphml(&g, stdout, /*prefixattr=*/ 1);
+
+      print_attributes(&g);
 
       igraph_destroy(&g);
 
