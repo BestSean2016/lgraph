@@ -20,10 +20,10 @@ igraph_bool_t bfs_callback(const igraph_t *graph,
                igraph_integer_t rank,
                igraph_integer_t dist,
                void *extra) {
-  printf(" %li", (long int) vid);
+  // printf(" %li", (long int) vid);
   char strid[32];
   snprintf(strid, 32, "%d", vid);
-  SETVAS((igraph_t *)graph, "NodeLabel", vid, strid);
+  SETVAS((igraph_t *)graph, "label", vid, strid);
   return 0;
 }
 
@@ -296,9 +296,18 @@ int walk_3(int argc, char* argv[]) {
     igraph_vector_t edge;
     std::vector<int> e;
     int MAX_NODE = atoi(argv[1]);
+    igraph_vector_t order, rank, father, pred, succ, dist, roots;
+    igraph_i_set_attribute_table(&igraph_cattribute_table);
 
     igraph_vector_init(&y, 0);
     igraph_vector_init(&edge, 0);
+    igraph_vector_init(&order, 0);
+    igraph_vector_init(&rank, 0);
+    igraph_vector_init(&father, 0);
+    igraph_vector_init(&pred, 0);
+    igraph_vector_init(&succ, 0);
+    igraph_vector_init(&dist, 0);
+    igraph_vector_init(&roots, 0);
 
 
     igraph_tree(&gIn, MAX_NODE, atoi(argv[2]), IGRAPH_TREE_IN);
@@ -329,17 +338,32 @@ int walk_3(int argc, char* argv[]) {
     for (int i = 0; i < (int)e.size(); ++i)
       VECTOR(edge)[i] = e[i];
 
+    igraph_destroy(&gOut);
+    igraph_destroy(&gIn);
+    igraph_vector_destroy(&y);
+
     igraph_create(&g, &edge, MAX_NODE * 2, 1);
+    igraph_vector_destroy(&edge);
+
+
+    igraph_bfs(&g, /*root=*/0, /*&roots*/0, /*neimode=*/ IGRAPH_IN,
+           /*unreachable=*/ 1, /*restricted=*/ 0,
+           &order, &rank, &father, &pred, &succ, &dist,
+           /*callback=*/ bfs_callback, /*extra=*/ 0);
 
     write_graphml(argv[3], &g);
 
+
+    igraph_vector_destroy(&order);
+    igraph_vector_destroy(&rank);
+    igraph_vector_destroy(&father);
+    igraph_vector_destroy(&pred);
+    igraph_vector_destroy(&succ);
+    igraph_vector_destroy(&dist);
+    igraph_vector_destroy(&roots);
+
+
     igraph_destroy(&g);
-    igraph_destroy(&gOut);
-    igraph_destroy(&gIn);
-
-    igraph_vector_destroy(&edge);
-    igraph_vector_destroy(&y);
-
     return 0;
 }
 
